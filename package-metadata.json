@@ -1,0 +1,7 @@
+{
+	"version": "0.0.1",
+	"url": "https://codeshark.live",
+	"description": "Bring Code into your editor",
+	"sublime_text": "*",
+	"platforms": ["*"]
+}

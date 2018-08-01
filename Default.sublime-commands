@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "CodeShark: SearchCode",
+        "command": "code_shark_search_code"
+    },
+    {
+        "caption": "CodeShark: Update API Key",
+        "command": "code_shark_update_api_key"
+    }
+]

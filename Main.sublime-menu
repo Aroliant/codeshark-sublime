@@ -1,0 +1,23 @@
+[
+    {
+        "id": "preferences",
+        "children":
+        [            
+            {
+                "caption": "CodeShark",
+                "mnemonic": "C",
+                "children" : [
+                        {
+                            "caption": "Search Code",
+                            "mnemonic": "C",
+                            "command": "code_shark_search_code",
+                        },{
+                            "caption": "Update API Key",
+                            "mnemonic": "C",
+                            "command": "code_shark_update_api_key",
+                        }
+                ]
+            }
+        ]
+    }
+]
