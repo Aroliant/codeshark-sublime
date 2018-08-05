@@ -1,0 +1,6 @@
+[
+    {
+        "keys": ["ctrl+alt+o"],
+        "command": "code_shark_search_code"
+    },
+]
