@@ -15,20 +15,15 @@ class CodeSharkUpdateApiKeyCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		home = expanduser("~")
 		config_file = open(home + "/.codeshark","w") 
-		global API_KEY
-		
+		global API_KEY			
 
 		def on_done(key):
 			API_KEY = key
 			config_file.write(key)
+			self.window.status_message("CodeShark : API Key Updated")
+			
 
-		def on_change(self):
-			pass
-
-		def on_cancel(self):
-			pass
-
-		self.window.show_input_panel("CodeShark", "Enter CodeShark API Key", on_done, on_change, on_cancel)
+		self.window.show_input_panel("CodeShark : Enter API Key", "", on_done, None, None)
 
 
 class CodeSharkInsertCodeCommand(sublime_plugin.TextCommand):
@@ -36,9 +31,18 @@ class CodeSharkInsertCodeCommand(sublime_plugin.TextCommand):
 		req = Request("https://api.codeshark.live/api/program/" + pickedID)
 		req.add_header('X-API-Key',API_KEY)
 		req.get_method = lambda: "POST"
-		data = urlopen(req).read()
+		data = ""
+		try: 
+			data = urlopen(req).read()
+		except Exception:
+			return sublime.message_dialog("Unable to load program, Please try again")
+		
 		data = data.decode("utf-8") 
-		code = json.loads(data)['program']['program']
+		JSONData = json.loads(data)
+		if JSONData['success'] == False:			
+			return sublime.message_dialog(JSONData['error'])
+
+		code = JSONData['program']['program']
 		self.view.insert(edit, self.view.sel()[0].begin(), code)
 
 
@@ -71,9 +75,16 @@ class ListPackagesThread(threading.Thread):
 		req = Request("https://api.codeshark.live/api/programs/")
 		req.add_header('X-API-Key',API_KEY)
 		req.get_method = lambda: "POST"
-		data = urlopen(req).read()
+		try: 
+			data = urlopen(req).read()
+		except Exception:
+			return sublime.message_dialog("Unable to load programs, Please try again")
+
 		data = data.decode("utf-8") 
 		JSONData = json.loads(data)
+		if JSONData['success'] == False:
+			sublime.message_dialog(JSONData['error'])
+			return self.window.run_command('code_shark_update_api_key')
 		for program in JSONData['programs']:	
 			_program = [program['title'], program['category_name'], str(program["program_id"])]
 			self.list.append(_program)

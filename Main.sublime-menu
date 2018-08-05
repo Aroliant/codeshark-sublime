@@ -9,11 +9,11 @@
                 "children" : [
                         {
                             "caption": "Search Code",
-                            "mnemonic": "C",
+                            "mnemonic": "S",
                             "command": "code_shark_search_code",
                         },{
                             "caption": "Update API Key",
-                            "mnemonic": "C",
+                            "mnemonic": "U",
                             "command": "code_shark_update_api_key",
                         }
                 ]
