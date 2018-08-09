@@ -46,7 +46,8 @@ class CodeSharkInsertCodeCommand(sublime_plugin.TextCommand):
 			return sublime.message_dialog(JSONData['error'])
 
 		code = JSONData['program']['program']
-		self.view.insert(edit, self.view.sel()[0].begin(), code)
+		for selection in self.view.sel():
+			self.view.insert(edit, selection.begin(), code)
 
 
 class CodeSharkSearchCodeCommand(sublime_plugin.WindowCommand):
