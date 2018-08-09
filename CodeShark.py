@@ -18,8 +18,10 @@ class CodeSharkUpdateApiKeyCommand(sublime_plugin.WindowCommand):
 
 		def on_done(key):
 			API_KEY = key
-			config_file.write(key)
-			self.window.status_message("CodeShark : API Key Updated")
+			if key != "":
+				config_file.write(key)
+				config_file.close()
+				self.window.status_message("CodeShark : API Key Updated")
 			
 
 		self.window.show_input_panel("CodeShark : Enter API Key", "", on_done, None, None)
@@ -33,8 +35,10 @@ class CodeSharkInsertCodeCommand(sublime_plugin.TextCommand):
 		data = ""
 		try: 
 			data = urlopen(req).read()
+		except urllib2.HTTPError:
+			return sublime.message_dialog("HTTP Error occured, Please try again")
 		except Exception:
-			return sublime.message_dialog("Unable to load program, Please try again")
+			return sublime.message_dialog("Some problem occured, Try again")
 		
 		data = data.decode("utf-8") 
 		JSONData = json.loads(data)
@@ -50,8 +54,8 @@ class CodeSharkSearchCodeCommand(sublime_plugin.WindowCommand):
 		home = expanduser("~")
 		config_file = open(home + "/.codeshark","r") 
 		global API_KEY
-		API_KEY = config_file.readline()
-		print(API_KEY)
+		API_KEY = config_file.readline()		
+		config_file.close()
 		ListPackagesThread(self.window).start()
 
 
@@ -76,6 +80,8 @@ class ListPackagesThread(threading.Thread):
 		req.get_method = lambda: "POST"
 		try: 
 			data = urlopen(req).read()
+		except urllib2.HTTPError:
+			return sublime.message_dialog("HTTP Error occured, Please try again")
 		except Exception:
 			return sublime.message_dialog("Unable to load programs, Please try again")
 
