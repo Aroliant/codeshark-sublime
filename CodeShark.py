@@ -9,7 +9,6 @@ except ImportError:
     from urllib2 import Request, urlopen  # Python 2
 
 API_KEY = ""
-pickedID = ""
 
 class CodeSharkUpdateApiKeyCommand(sublime_plugin.WindowCommand):
 	def run(self):
@@ -27,7 +26,7 @@ class CodeSharkUpdateApiKeyCommand(sublime_plugin.WindowCommand):
 
 
 class CodeSharkInsertCodeCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
+	def run(self, edit,pickedID):
 		req = Request("https://api.codeshark.live/api/program/" + pickedID)
 		req.add_header('X-API-Key',API_KEY)
 		req.get_method = lambda: "POST"
@@ -94,11 +93,9 @@ class ListPackagesThread(threading.Thread):
 
 		if picked == -1:
 			return
-		global pickedID
 		pickedID = self.list[picked][2]
-		print("Selected Program ID ", pickedID)
 
 		def insert_code():
-			self.window.run_command('code_shark_insert_code')
+			self.window.run_command('code_shark_insert_code', { 'pickedID': pickedID })
 			pass
 		sublime.set_timeout(insert_code, 10)
